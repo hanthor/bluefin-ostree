@@ -31,7 +31,7 @@ packages:
   - basesystem
   - bash
   - coreutils
-  - cronie
+
   - crypto-policies
   - crypto-policies-scripts
   - curl
@@ -61,7 +61,7 @@ packages:
   - rootfiles
   - rpm
   - rpm-plugin-audit
-  - rsyslog
+
   - selinux-policy-targeted
   - setup
   - shadow-utils
@@ -83,6 +83,10 @@ packages:
   - intel-gpu-firmware
   - iwlwifi-dvm-firmware
   - iwlwifi-mvm-firmware
+  - iwlwifi-mvm-firmware
+  - kernel
+  - kernel-modules
+  - kernel-modules-extra
   - kernel-tools
   - libsysfs
   - linux-firmware
@@ -139,7 +143,7 @@ packages:
   - attr
   - bc
   - cpio
-  - crontabs
+
   - cyrus-sasl-plain
   - dbus
   - ed
@@ -150,13 +154,11 @@ packages:
   - mcelog
   - net-tools
   - pciutils
-  - psacct
+
   - quota
   - redhat-release
   - redhat-release-eula
-  - rsyslog-gnutls
-  - rsyslog-gssapi
-  - rsyslog-relp
+
   - symlinks
   - systemd-udev
   - tar
@@ -169,7 +171,7 @@ packages:
   - bpftool
   - bzip2
   - chrony
-  - cockpit
+
   - cryptsetup
   - dos2unix
   - dosfstools
@@ -223,7 +225,7 @@ packages:
   - qt6-qtbase
   - qt6-qtbase-gui
   - qt6-qtdeclarative
-  - setroubleshoot
+
   - telnet
   - thermald
   # System Components
@@ -265,16 +267,14 @@ packages:
   - tailscale
   # Ublue OS / COPRs
   - ublue-os-luks
-  - ublue-os-signing
   - ublue-os-udev-rules
   - ublue-os-update-services
   - ublue-motd
-  - ublue-fastfetch
-  - ublue-bling
+
   - ublue-rebase-helper
   - ublue-setup-services
   - ublue-polkit-rules
-  - ublue-brew
+
   - uupd
   # Staging / Extensions
   - nerd-fonts

@@ -3,6 +3,8 @@ metadata:
     Aurora LTS (KDE) image.
 include:
   - aurora-common.yaml
+ref: ostree/1/1/0
+
 
 packages:
   # KDE Plasma
@@ -27,6 +29,6 @@ packages:
   - plasma-workspace-wayland
   - polkit-kde
   - sddm-kcm
-  - system-config-printer
+
   - xdg-desktop-portal-kde
   - xdg-user-dirs

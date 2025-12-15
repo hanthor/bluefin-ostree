@@ -1,20 +1,33 @@
 #!/bin/bash
 set -xeuo pipefail
-# This script copies the manifests from the current directory
-# into their installed location.
-manifestdir=${1:-/usr/share/doc/bootc-base-imagectl/manifests}
-# Recurse into the upstream manifest installation
-# Recurse into the upstream manifest installation
-# (cd fedora-bootc && ./install-manifests "$manifestdir")
-# Copy upstream manifests
-mkdir -p "$manifestdir"
-cp fedora-bootc/*.yaml "$manifestdir/"
 
-# Delete all top-level manifests; the canonical list of valid CentOS manifests is in this repo.
-# rm -vf $manifestdir/*.yaml
-# Install our manifests.
-install -D -m 0664 -t $manifestdir minimal.yaml minimal-plus.hidden.yaml standard.yaml common-base.yaml gnome.yaml aurora-common.yaml kde.yaml
-# And install dependency manifests
-cp -a includes $manifestdir
-# Set the default
-ln -sf gnome.yaml $manifestdir/default.yaml
+manifestdir=${1:-/usr/share/doc/bootc-base-imagectl/manifests}
+
+mkdir -p "$manifestdir/base-images"
+for image in minimal standard; do
+    if [ -f $image.yaml ]; then
+        cp -a $image.yaml "$manifestdir/base-images/"
+    fi
+done
+# Bluefin/Aurora specific
+ln -sf standard.yaml "$manifestdir/base-images/default.yaml"
+
+mkdir -p "$manifestdir/packages"
+# Map gnome -> silverblue-like (cosmic-atomic), kde -> kinoite-like
+for image in gnome kde; do
+    cp -a $image.yaml "$manifestdir/"
+    # If we had package splits, we would copy them here.
+    # Currently bluefin seems to have single manifests.
+done
+
+cp -a common-base.yaml "$manifestdir/"
+cp -a aurora-common.yaml "$manifestdir/"
+# cp -a packages/common.yaml $manifestdir/packages/ # Not present
+
+# Includes
+if [ -d includes ]; then
+    cp -r includes "$manifestdir/"
+fi
+
+# Set default
+ln -sf gnome.yaml "$manifestdir/default.yaml"

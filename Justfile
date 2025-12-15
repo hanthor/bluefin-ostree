@@ -39,6 +39,7 @@ build variant=default_variant:
         "--security-opt=label=disable"
         "--cap-add=all"
         "--device" "/dev/fuse"
+        "-v" "${PWD}:/buildcontext"
         "-t" "localhost/${variant}-bootc:latest"
     )
     

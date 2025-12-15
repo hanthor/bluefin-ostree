@@ -27,9 +27,21 @@ cp /src/RPM-GPG-KEY-EPEL-10 /etc/pki/rpm-gpg/
 echo "Initializing repo..."
 mkdir -p /repo
 ostree --repo=/repo init --mode=archive
-rpm-ostree compose tree --repo=/repo --cachedir=/workdir --unified-core ${MANIFEST}.yaml
+# Capture output to separate file to extract commit hash
+rpm-ostree compose tree --repo=/repo --cachedir=/workdir --unified-core ${MANIFEST}.yaml | tee /tmp/compose.log
+
 # Determine branch/ref
-COMMIT=$(ostree --repo=/repo refs | head -n 1)
+COMMIT=$(ostree --repo=/repo refs)
+if [ -z "$COMMIT" ]; then
+    echo "No ref found, attempting to parse commit from logs..."
+    COMMIT=$(grep "Wrote commit:" /tmp/compose.log | awk '{print $3}')
+fi
+
+if [ -z "$COMMIT" ]; then
+    echo "Error: No commit found in repo or logs"
+    ostree --repo=/repo summary view
+    exit 1
+fi
 echo "Checking out commit $COMMIT..."
 ostree --repo=/repo checkout -U $COMMIT /target-rootfs
 

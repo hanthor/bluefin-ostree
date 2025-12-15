@@ -1,0 +1,83 @@
+Building Bluefin (GNOME)...
+[1/4] STEP 1/1: FROM ghcr.io/projectbluefin/common@sha256:d2443dae3b956b5af024e2b4767f20e82a630a47f176391417acecd096e77183 AS common
+--> ac96734fb293
+[2/4] STEP 1/4: FROM quay.io/centos-bootc/centos-bootc:stream10 AS repos
+[2/4] STEP 2/4: RUN rm -rf /etc/yum.repos.d/*
+--> Using cache 26bc6a9dccc699282cebe0c939ba97e9c4aa50d1d371e6f18ab0fd4af0e2696f
+--> 26bc6a9dccc6
+[2/4] STEP 3/4: COPY *.repo /etc/yum.repos.d/
+--> Using cache 3c7cc4dddec12d6cc4e92baac06ef277e939c2047257e0e13a6e3df5511b7b5a
+--> 3c7cc4dddec1
+[2/4] STEP 4/4: COPY RPM-GPG-KEY* /etc/pki/rpm-gpg/
+--> Using cache ee45cb85f507cb13fb7c4cc8d9218be88b9f6777d154ea44e18a6f045453f83d
+--> ee45cb85f507
+[3/4] STEP 1/7: FROM quay.io/centos-bootc/centos-bootc:stream10 AS builder
+[3/4] STEP 2/7: ARG MANIFEST=gnome
+--> Using cache b2c11f85d5c9efb694a241c5c0ae05ee6a3f80875e254b0f0503996363602695
+--> b2c11f85d5c9
+[3/4] STEP 3/7: COPY . /src
+--> 5fceb2affba1
+[3/4] STEP 4/7: COPY --from=common /system_files/shared /src/system_files/shared
+--> 4d86123481cf
+[3/4] STEP 5/7: COPY --from=common /system_files/bluefin /src/system_files/bluefin
+--> 432e38ed87de
+[3/4] STEP 6/7: WORKDIR /src
+--> 62b726875fc7
+[3/4] STEP 7/7: RUN --mount=type=cache,rw,id=bootc-base-image-cache-v2,target=/cache     --mount=type=bind,rw,from=repos,src=/,dst=/repos <<EORUN (set -xeuo pipefail...)
++ ./install-manifests
++ manifestdir=/usr/share/doc/bootc-base-imagectl/manifests
++ mkdir -p /usr/share/doc/bootc-base-imagectl/manifests/base-images
++ for image in minimal standard
++ '[' -f minimal.yaml ']'
++ cp -a minimal.yaml /usr/share/doc/bootc-base-imagectl/manifests/base-images/
++ for image in minimal standard
++ '[' -f standard.yaml ']'
++ cp -a standard.yaml /usr/share/doc/bootc-base-imagectl/manifests/base-images/
++ ln -sf standard.yaml /usr/share/doc/bootc-base-imagectl/manifests/base-images/default.yaml
++ mkdir -p /usr/share/doc/bootc-base-imagectl/manifests/packages
++ for image in gnome kde
++ cp -a gnome.yaml /usr/share/doc/bootc-base-imagectl/manifests/
++ for image in gnome kde
++ cp -a kde.yaml /usr/share/doc/bootc-base-imagectl/manifests/
++ cp -a common-base.yaml /usr/share/doc/bootc-base-imagectl/manifests/
++ cp -a aurora-common.yaml /usr/share/doc/bootc-base-imagectl/manifests/
++ '[' -d includes ']'
++ cp -r includes /usr/share/doc/bootc-base-imagectl/manifests/
++ ln -sf gnome.yaml /usr/share/doc/bootc-base-imagectl/manifests/default.yaml
++ /usr/libexec/bootc-base-imagectl list
+aurora-common: Aurora LTS common configuration.
+
+---
+common-base: Bluefin/Aurora LTS common base configuration.
+
+---
+gnome: Bluefin LTS GNOME image.
+
+---
+kde: Aurora LTS (KDE) image.
+
+---
+minimal: Effectively just bootc, systemd, kernel, and dnf as a starting point.
+---
+standard: A relatively full, but still generic base image. Roughly
+similar to a headless server installation. Automatic updates
+are on by default.
+
+---
++ /usr/libexec/bootc-base-imagectl build-rootfs --cachedir=/cache --reinject --manifest=gnome /repos /target-rootfs
+note: /target-rootfs and /cache on separate filesystems; caching RPMs only
+warning: boot-location: "new" is deprecated, use boot-location: modules
+rpm-ostree version: 2025.12
+Enabled rpm-md repositories: copr:copr.fedorainfracloud.org:jreilly1821:c10s-gnome copr:copr.fedorainfracloud.org:che:nerd-fonts copr:copr.fedorainfracloud.org:ublue-os:packages copr:copr.fedorainfracloud.org:ublue-os:staging baseos-source appstream-source baseos appstream crb epel-multimedia epel tailscale-stable
+Updating metadata for 'copr:copr.fedorainfracloud.org:jreilly1821:c10s-gnome'...done
+Updating metadata for 'copr:copr.fedorainfracloud.org:che:nerd-fonts'...done
+Updating metadata for 'copr:copr.fedorainfracloud.org:ublue-os:packages'...done
+Updating metadata for 'copr:copr.fedorainfracloud.org:ublue-os:staging'...done
+Updating metadata for 'baseos-source'...done
+Updating metadata for 'appstream-source'...done
+Updating metadata for 'baseos'...done
+error: Installing packages: Updating rpm-md repo 'baseos': cannot update repo 'baseos': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried; Last error: Downloading successful, but checksum doesn't match. Calculated: 09a01d07ce7edcec04c0df0cc3e7d8035cfbf720427e4d57624587040d161ef5a27ec27076f4852c8989ec8093048ab6d38dcfdf22f2967f12171171f245da3f(sha512)  Expected: c2d1cd868904e17cc44a8a5cf7b79d5d1d196e8e0427db0d5e35526f4ff9d99d0578cb1f86e52e62781e56d681d285112a497895e61c04f6f86ff7eb18beaf64(sha512) 
+error: Executing compose install: ExitStatus(unix_wait_status(256))
+Error executing command: Command '['rpm-ostree', 'compose', 'rootfs', '--cachedir=/cache', '--source-root-rw=/repos', '/usr/share/doc/bootc-base-imagectl/manifests/gnome.yaml', '/target-rootfs']' returned non-zero exit status 1.
+Error: building at STEP "RUN --mount=type=cache,rw,id=bootc-base-image-cache-v2,target=/cache --mount=type=bind,rw,from=repos,src=/,dst=/repos <<EORUN": while running runtime: exit status 1
+error: Recipe `build` failed with exit code 1
