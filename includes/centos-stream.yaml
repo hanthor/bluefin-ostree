@@ -1,0 +1,39 @@
+packages:
+ # To support builds *from* this host using entitled content
+  - subscription-manager
+ # https://issues.redhat.com/browse/RHEL-35291
+  - dnf-yum
+  # dnf-bootc depends on libraries DNF needs for bootc integration
+  - dnf-bootc
+  # https://gitlab.com/redhat/rhel/bifrost/rhel-bootc/-/issues/344
+  - rhc
+
+# Configuration for bootc
+postprocess:
+  # XFS is our default filesystem
+  - |
+    #!/usr/bin/env bash
+    mkdir -p /usr/lib/bootc/install/
+    cat > /usr/lib/bootc/install/20-rhel.toml << EOF
+    [install]
+    root-fs-type = "xfs"
+    EOF
+  # These enable librhsm which enables host subscriptions to work in containers
+  # https://github.com/rpm-software-management/librhsm/blob/fcd972cbe7c8a3907ba9f091cd082b1090231492/rhsm/rhsm-context.c#L30
+  # https://github.com/openshift/os/pull/876/commits/dd35dd0e102aeed90df14f05c8ae9da4c8c5962a
+  - |
+    #!/usr/bin/bash
+    set -xeuo pipefail
+    ln -sr /run/secrets/etc-pki-entitlement /etc/pki/entitlement-host
+    ln -sr /run/secrets/rhsm /etc/rhsm-host
+  # Enable bootc rhsm fact publishing
+  - |
+    #!/usr/bin/bash
+    set -xeuo pipefail
+    cat > /usr/lib/systemd/system-preset/80-bootc.preset << EOF
+    enable bootc-publish-rhsm-facts.service
+    EOF
+    # The base fedora tier-1 manifest also does this, but those
+    # postprocess scripts run before ours so we need to do it again to
+    # pick up our presets
+    systemctl preset-all

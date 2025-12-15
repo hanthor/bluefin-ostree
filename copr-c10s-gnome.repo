@@ -1,0 +1,10 @@
+[copr:copr.fedorainfracloud.org:jreilly1821:c10s-gnome]
+name=Copr repo for c10s-gnome owned by jreilly1821
+baseurl=https://download.copr.fedorainfracloud.org/results/jreilly1821/c10s-gnome/epel-10-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://download.copr.fedorainfracloud.org/results/jreilly1821/c10s-gnome/pubkey.gpg
+repo_gpgcheck=0
+enabled=1
+enabled_metadata=1

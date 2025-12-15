@@ -1,0 +1,58 @@
+metadata:
+  summary: |
+    RHEL for Edge bootc image
+
+packages: 
+- basesystem
+- bash
+- bootc
+- chrony
+- clevis
+- clevis-luks
+- container-selinux
+- containers-common
+- coreutils
+- cryptsetup
+- dbus
+- dracut
+- e2fsprogs
+- firewalld
+- glibc
+- greenboot
+- ignition
+- ignition-edge
+- iproute
+- iputils
+- kernel
+- kernel-core
+- keyutils
+- kmod
+- less
+- libselinux
+- libsemanage
+- ModemManager
+- NetworkManager
+- NetworkManager-wwan
+- openssh-clients
+- openssh-server
+- openssl
+- ostree
+- pam
+- podman
+- policycoreutils
+- polkit
+- procps-ng
+- python3
+- rpm
+- rpm-ostree
+- selinux-policy-targeted
+- shadow-utils
+- systemd
+- systemd-udev
+- tar
+- tmux
+- tpm2-tools
+- tzdata
+- util-linux
+- xz
+- zlib

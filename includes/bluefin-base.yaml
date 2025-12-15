@@ -1,0 +1,27 @@
+packages:
+ # https://issues.redhat.com/browse/RHEL-35291
+  - dnf-yum
+  # dnf-bootc depends on libraries DNF needs for bootc integration
+  - dnf-bootc
+
+exclude-packages:
+  - console-login-helper-messages
+
+# Configuration for bootc
+postprocess:
+  # XFS is our default filesystem
+  - |
+    #!/usr/bin/env bash
+    mkdir -p /usr/lib/bootc/install/
+    cat > /usr/lib/bootc/install/20-rhel.toml << EOF
+    [install]
+    root-fs-type = "xfs"
+    EOF
+  # Enable bootc rhsm fact publishing
+  - |
+    #!/usr/bin/bash
+    set -xeuo pipefail
+    cat > /usr/lib/systemd/system-preset/80-bootc.preset << EOF
+    enable bootc-publish-rhsm-facts.service
+    EOF
+    systemctl preset-all

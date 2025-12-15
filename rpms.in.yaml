@@ -1,0 +1,20 @@
+
+contentOrigin:
+  repofiles:
+    - ./cs.repo
+    - ./cs-source.repo
+    - ./epel.repo
+    - ./epel-multimedia.repo
+    - ./tailscale.repo
+    - ./copr-c10s-gnome.repo
+    - ./copr-ublue-os-packages.repo
+    - ./copr-ublue-os-staging.repo
+    - ./copr-nerd-fonts.repo
+packages: []  # Defer to the tree file
+arches:
+  - x86_64
+  - aarch64
+  - ppc64le
+  - s390x
+context:
+    rpmOstreeTreefile: bluefin.yaml

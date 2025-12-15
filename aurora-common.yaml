@@ -1,0 +1,11 @@
+metadata:
+  summary: |
+    Aurora LTS common configuration.
+include:
+  - common-base.yaml
+
+packages:
+  # Aurora Branding
+  - aurora-logos
+  - kcm_ublue
+  - krunner-bazaar

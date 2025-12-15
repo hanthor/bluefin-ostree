@@ -1,0 +1,32 @@
+metadata:
+  summary: |
+    Aurora LTS (KDE) image.
+include:
+  - aurora-common.yaml
+
+packages:
+  # KDE Plasma
+  - plasma-desktop
+  - sddm
+  - konsole
+  - dolphin
+  - plymouth
+  - plymouth-system-theme
+  - fwupd
+  - systemd-resolved
+  - systemd-container
+  - systemd-oomd
+  - libcamera
+  - libcamera-v4l2
+  - libcamera-gstreamer
+  - libcamera-tools
+  
+  # Group: KDE Plasma Workspaces
+  - kwin
+  - plasma-workspace
+  - plasma-workspace-wayland
+  - polkit-kde
+  - sddm-kcm
+  - system-config-printer
+  - xdg-desktop-portal-kde
+  - xdg-user-dirs

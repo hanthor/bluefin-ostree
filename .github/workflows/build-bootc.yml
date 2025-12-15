@@ -1,0 +1,65 @@
+name: Build Bootc Image
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: bluefin-ostree
+  REGISTRY: ghcr.io
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Delete huge unnecessary tools folder
+        run: rm -rf /opt/hostedtoolcache
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Podman Info
+        run: podman info
+
+      - name: Log in to the Container registry
+        uses: redhat-actions/podman-login@v1
+        if: github.event_name != 'pull_request'
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Image
+        id: build-image
+        run: |
+          IMAGE_TAG=latest
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            IMAGE_TAG=pr-${{ github.event.number }}
+          fi
+          
+          # We need to map the current directory to /buildcontext because the Containerfile 
+          # specifically expects to write the oci-archive there during the build process
+          # (via build.sh -> rpm-ostree compose ... --output oci-archive:/buildcontext/out.ociarchive)
+          
+          podman build \
+            --security-opt=label=disable \
+            --cap-add=all \
+            --device /dev/fuse \
+            -v $(pwd):/buildcontext \
+            -t ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${IMAGE_TAG} \
+            .
+            
+          echo "image_tag=${IMAGE_TAG}" >> $GITHUB_OUTPUT
+
+      - name: Push Image
+        if: github.event_name != 'pull_request'
+        run: |
+          podman push ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ steps.build-image.outputs.image_tag }}
