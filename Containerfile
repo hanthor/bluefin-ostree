@@ -26,7 +26,7 @@ COPY --from=common /system_files/shared /src/system_files/shared
 COPY --from=common /system_files/bluefin /src/system_files/bluefin
 WORKDIR /src
 RUN --mount=type=cache,rw,id=bootc-base-image-cache-v2,target=/cache \
-    --mount=type=bind,rw,from=repos,src=/,dst=/repos <<EORUN
+    --mount=type=bind,from=repos,src=/,dst=/repos <<EORUN
 set -xeuo pipefail
 # Put our manifests into the builder image in the same location they'll be in the
 # final image.
