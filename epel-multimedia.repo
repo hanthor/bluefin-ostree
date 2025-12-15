@@ -1,6 +1,6 @@
 [epel-multimedia]
 name=negativo17 - Multimedia
-baseurl=https://negativo17.org/repos/multimedia/epel-$releasever/$basearch/
+baseurl=https://negativo17.org/repos/multimedia/epel-10/$basearch/
 enabled=1
 skip_if_unavailable=1
 gpgkey=https://negativo17.org/repos/RPM-GPG-KEY-slaanesh
@@ -12,7 +12,7 @@ repo_gpgcheck=0
 
 [epel-multimedia-source]
 name=negativo17 - Multimedia - Source
-baseurl=https://negativo17.org/repos/multimedia/epel-$releasever/SRPMS
+baseurl=https://negativo17.org/repos/multimedia/epel-10/SRPMS
 enabled=0
 skip_if_unavailable=1
 gpgkey=https://negativo17.org/repos/RPM-GPG-KEY-slaanesh

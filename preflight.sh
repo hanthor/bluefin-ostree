@@ -3,7 +3,7 @@
 # check. Currently this just verifies that the git submodules are set up.
 set -eu
 cd $(dirname $0)
-if test '!' -f fedora-bootc/fedora-bootc.yaml; then
+if test '!' -f fedora-bootc/centos-stream-common.yaml; then
   echo "Please run:"
   echo " git submodule update --init --recursive"
   exit 1

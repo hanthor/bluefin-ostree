@@ -4,11 +4,16 @@ set -xeuo pipefail
 # into their installed location.
 manifestdir=${1:-/usr/share/doc/bootc-base-imagectl/manifests}
 # Recurse into the upstream manifest installation
-(cd fedora-bootc && ./install-manifests "$manifestdir")
+# Recurse into the upstream manifest installation
+# (cd fedora-bootc && ./install-manifests "$manifestdir")
+# Copy upstream manifests
+mkdir -p "$manifestdir"
+cp fedora-bootc/*.yaml "$manifestdir/"
+
 # Delete all top-level manifests; the canonical list of valid CentOS manifests is in this repo.
-rm -vf $manifestdir/*.yaml
+# rm -vf $manifestdir/*.yaml
 # Install our manifests.
-install -D -m 0664 -t $manifestdir minimal.yaml minimal-plus.hidden.yaml standard.yaml edge.hidden.yaml common-base.yaml gnome.yaml aurora-common.yaml kde.yaml
+install -D -m 0664 -t $manifestdir minimal.yaml minimal-plus.hidden.yaml standard.yaml common-base.yaml gnome.yaml aurora-common.yaml kde.yaml
 # And install dependency manifests
 cp -a includes $manifestdir
 # Set the default

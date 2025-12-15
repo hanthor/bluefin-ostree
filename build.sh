@@ -15,12 +15,28 @@ cp /src/RPM-GPG-KEY-EPEL-10 /etc/pki/rpm-gpg/
 
 ./install-manifests
 # And embed the rebuild script
-install -m 0755 -t /usr/libexec fedora-bootc/bootc-base-imagectl
+# install -m 0755 -t /usr/libexec fedora-bootc/bootc-base-imagectl
 # Verify that listing works
-/usr/libexec/bootc-base-imagectl list >/dev/null
+# /usr/libexec/bootc-base-imagectl list >/dev/null
+
 # Run the build script in the same way we expect custom images to do, and also
 # "re-inject" the manifests into the target, so secondary container builds can use it.
-/usr/libexec/bootc-base-imagectl build-rootfs --reinject --manifest=${MANIFEST} /target-rootfs
+# /usr/libexec/bootc-base-imagectl build-rootfs --reinject --manifest=${MANIFEST} /target-rootfs
+
+# Manual build-rootfs replacement using rpm-ostree
+echo "Initializing repo..."
+mkdir -p /repo
+ostree --repo=/repo init --mode=archive
+rpm-ostree compose tree --repo=/repo --cachedir=/workdir --unified-core ${MANIFEST}.yaml
+# Determine branch/ref
+COMMIT=$(ostree --repo=/repo refs | head -n 1)
+echo "Checking out commit $COMMIT..."
+ostree --repo=/repo checkout -U $COMMIT /target-rootfs
+
+# Reinject manifests into the target
+echo "Reinjecting manifests..."
+mkdir -p /target-rootfs/usr/share/doc/bootc-base-imagectl/manifests
+cp -r /usr/share/doc/bootc-base-imagectl/manifests/* /target-rootfs/usr/share/doc/bootc-base-imagectl/manifests/
 
 # Inject system files
 echo "Injecting system files..."
