@@ -30,7 +30,7 @@ jobs:
         run: podman info
 
       - name: Log in to the Container registry
-        uses: redhat-actions/podman-login@v1
+        uses: redhat-actions/podman-login@v2
         if: github.event_name != 'pull_request'
         with:
           registry: ${{ env.REGISTRY }}
