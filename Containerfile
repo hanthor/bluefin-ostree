@@ -4,7 +4,7 @@
 
 # Note that because of how cachi2 manages the repo files, we can't
 # do the separate "repos container" pattern.
-ARG COMMON_IMAGE_REF=ghcr.io/projectbluefin/common@sha256:0391d804e58ab11a90df41846967fcaa9841f662a07a4b05c584e1a7c796e074
+ARG COMMON_IMAGE_REF=ghcr.io/projectbluefin/common@sha256:b34f56fb3ea4dc34bd8cbdbd971187c2ce9d4bf84ebed2ddd1039b0388e11047
 FROM ${COMMON_IMAGE_REF} AS common
 
 
